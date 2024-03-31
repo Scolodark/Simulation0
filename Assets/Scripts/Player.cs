@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 
     [Header("벽타기")]
     [SerializeField] float climbTime;
+    bool checkWall;
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
         playerMove();
         playerJump();
         playerDash();
+        playerClimb();
 
         checkGround();
         coolTimeTimer();
@@ -66,15 +68,15 @@ public class Player : MonoBehaviour
     private void checkGround()
     {
         isGround = false;
-        float raySize = boxColl.size.y;
+        checkWall = false;
+        float raySizeY = boxColl.size.y;
 
-        RaycastHit2D ray = Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0f, Vector2.down, raySize/2.5f, LayerMask.GetMask("Ground"));
+        RaycastHit2D ray = Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0f, Vector2.down, raySizeY/2.5f, LayerMask.GetMask("Ground"));
 
         if (ray)
         {
             isGround = true;
         }
-
     }
 
     /// <summary>
@@ -134,8 +136,6 @@ public class Player : MonoBehaviour
             jumpCheck = true;
         }
 
-        Debug.Log(jumpCheck);
-
         //점프중 수평 이동속도 저하
     }
 
@@ -187,7 +187,46 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerClimb()
     {
-        ///중력 조절
+        if(checkWall == true)
+        {
+            rigid.gravityScale = -1f;
+        }
+        else if(checkWall == false)
+        {
+            rigid.gravityScale = defaultGravity;
+        }
+
+        Debug.Log(checkWall);
+    }
+
+    /// <summary>
+    /// 히트박스 들어옴
+    /// </summary>
+    /// <param name="_hitType"></param>
+    /// <param name="_coll"></param>
+    public void TriggerEnter(HitBox.enumHitType _hitType, Collider2D _coll)
+    {
+        switch (_hitType)
+        {
+            case HitBox.enumHitType.WallCheck:
+                checkWall = true;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 히트박스 나옴
+    /// </summary>
+    /// <param name="_hitType"></param>
+    /// <param name="_coll"></param>
+    public void TriggerExit(HitBox.enumHitType _hitType, Collider2D _coll)
+    {
+        switch (_hitType)
+        {
+            case HitBox.enumHitType.WallCheck:
+                checkWall = false;
+                break;
+        }
     }
 
 }
