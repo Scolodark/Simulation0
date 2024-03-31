@@ -29,6 +29,9 @@ public class Player : MonoBehaviour
     float dashVertical;
     bool dashCheck;
 
+    [Header("벽타기")]
+    [SerializeField] float climbTime;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -94,6 +97,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 점프
+    /// </summary>
     private void playerJump()
     {
 
@@ -118,12 +124,12 @@ public class Player : MonoBehaviour
         {
             rigid.gravityScale = defaultGravity * 0.19f;
         }
-        else
+        else//상승할때 기본 중력으로 복귀
         {
             rigid.gravityScale = defaultGravity;
         }
 
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space))//연속 숏점프 방지
         {
             jumpCheck = true;
         }
@@ -133,6 +139,9 @@ public class Player : MonoBehaviour
         //점프중 수평 이동속도 저하
     }
 
+    /// <summary>
+    /// 회피(대쉬)기능
+    /// </summary>
     private void playerDash()
     {
 
@@ -147,7 +156,7 @@ public class Player : MonoBehaviour
             dashCheck = false;
         }
 
-        if(isGround == true)
+        if(isGround == true)//공중에서 연속사용 방지
         {
             dashCheck = true;
         }
@@ -155,12 +164,15 @@ public class Player : MonoBehaviour
         jumpForce = dashVertical;
     }
 
+    /// <summary>
+    /// 타이머 기능
+    /// </summary>
     private void coolTimeTimer()
     {
-        if (dashTimer > 0f)
+        if (dashTimer > 0f)///대쉬 사용시간
         {
             dashTimer -= Time.deltaTime;
-            if(dashTimer < 0f)
+            if(dashTimer < 0f)//대쉬 시간이 끝났을때
             {
                 dashTimer = 0f;
                 doDash = 0f;
@@ -168,6 +180,14 @@ public class Player : MonoBehaviour
                 tr.Clear();
             }
         }
+    }
+
+    /// <summary>
+    /// 벽타기
+    /// </summary>
+    private void playerClimb()
+    {
+        ///중력 조절
     }
 
 }
