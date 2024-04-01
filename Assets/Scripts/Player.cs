@@ -37,6 +37,12 @@ public class Player : MonoBehaviour
     [Header("공격과방어")]
     float attackCoolTime;
     float attackAnimTime;
+    bool attackCheck;
+
+    //OverlabBoxAll
+    [SerializeField] Transform pos;
+    [SerializeField] Vector2 boxSize;
+    
 
     private void Awake()
     {
@@ -196,9 +202,20 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && attackCoolTime == 0)
         {
+
             anim.SetTrigger("isAttack");
             attackAnimTime = anim.GetCurrentAnimatorStateInfo(0).length;//애니메이션 쿨타임
-            attackCoolTime = attackAnimTime;
+            attackCoolTime = attackAnimTime *0.7f;
+
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+
+            foreach(Collider2D collider in collider2Ds)//잘모름
+            {
+                if (collider.tag == "Enemy")
+                {
+                    Debug.Log("충돌");
+                }
+            }
         }
     }
 
@@ -250,6 +267,10 @@ public class Player : MonoBehaviour
             case HitBox.enumHitType.WallCheck:
                 checkWall = true;
                 break;
+            case HitBox.enumHitType.EnemyCheck:
+                attackCheck = true;
+                break;
+
         }
     }
 
@@ -265,7 +286,16 @@ public class Player : MonoBehaviour
             case HitBox.enumHitType.WallCheck:
                 checkWall = false;
                 break;
+            case HitBox.enumHitType.EnemyCheck:
+                attackCheck = false;
+                break;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(pos.position, boxSize);
     }
 
 }
