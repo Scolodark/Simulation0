@@ -187,16 +187,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerClimb()
     {
-        if(checkWall == true)
-        {
-            rigid.gravityScale = -1f;
-        }
-        else if(checkWall == false)
-        {
-            rigid.gravityScale = defaultGravity;
-        }
-
-        Debug.Log(checkWall);
+        
     }
 
     /// <summary>
