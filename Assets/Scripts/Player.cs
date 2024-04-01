@@ -31,7 +31,12 @@ public class Player : MonoBehaviour
 
     [Header("벽타기")]
     [SerializeField] float climbTime;
+    float climbTimer;
     bool checkWall;
+
+    [Header("공격과방어")]
+    float attackCoolTime;
+    float attackAnimTime;
 
     private void Awake()
     {
@@ -58,6 +63,8 @@ public class Player : MonoBehaviour
         playerDash();
         playerClimb();
 
+        playerAttack();
+
         checkGround();
         coolTimeTimer();
     }
@@ -68,7 +75,6 @@ public class Player : MonoBehaviour
     private void checkGround()
     {
         isGround = false;
-        checkWall = false;
         float raySizeY = boxColl.size.y;
 
         RaycastHit2D ray = Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0f, Vector2.down, raySizeY/2.5f, LayerMask.GetMask("Ground"));
@@ -165,6 +171,38 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 벽타기
+    /// </summary>
+    private void playerClimb()
+    {
+        if (climbTimer == 0f && isGround == true)
+        {
+            climbTimer = climbTime;
+        }
+
+        if (moveDir.x != 0)
+        {
+            if (checkWall == true && climbTimer > 0f)
+            {
+                rigid.velocity = new Vector2(moveDir.x, jumpForce * 0.5f);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 공격하기
+    /// </summary>
+    private void playerAttack()
+    {
+        if (Input.GetMouseButtonDown(0) && attackCoolTime == 0)
+        {
+            anim.SetTrigger("isAttack");
+            attackAnimTime = anim.GetCurrentAnimatorStateInfo(0).length;//애니메이션 쿨타임
+            attackCoolTime = attackAnimTime;
+        }
+    }
+
+    /// <summary>
     /// 타이머 기능
     /// </summary>
     private void coolTimeTimer()
@@ -180,14 +218,24 @@ public class Player : MonoBehaviour
                 tr.Clear();
             }
         }
-    }
 
-    /// <summary>
-    /// 벽타기
-    /// </summary>
-    private void playerClimb()
-    {
-        
+        if(attackAnimTime > 0f)
+        {
+            attackCoolTime -= Time.deltaTime;
+            if(attackCoolTime < 0f)
+            {
+                attackCoolTime = 0f;
+            }
+        }
+
+        if (climbTimer > 0f)
+        {
+            climbTimer -= Time.deltaTime;
+            if (climbTimer < 0f)
+            {
+                climbTimer = 0f;
+            }
+        }
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ public class HitBox : MonoBehaviour
 
     void Start()
     {
-        player = GetComponent<Player>();
+        player = GetComponentInParent<Player>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
