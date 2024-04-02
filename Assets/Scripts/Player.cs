@@ -236,7 +236,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(attackAnimTime > 0f)
+        if(attackCoolTime > 0f)
         {
             attackCoolTime -= Time.deltaTime;
             if(attackCoolTime < 0f)
