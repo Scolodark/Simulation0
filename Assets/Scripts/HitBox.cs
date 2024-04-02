@@ -20,7 +20,7 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        player.TriggerEnter(hitType, collision);
+            player.TriggerEnter(hitType, collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)

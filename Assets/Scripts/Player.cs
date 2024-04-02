@@ -8,7 +8,10 @@ public class Player : MonoBehaviour
     [Header("이동과 점프")]
     [SerializeField] float moveSpeed;
     [SerializeField] float jumpForce;
+    [SerializeField] float runSpeed;
+    float run;
     bool jumpCheck = false;
+
 
     Rigidbody2D rigid;
     Vector3 moveDir;
@@ -35,14 +38,20 @@ public class Player : MonoBehaviour
     bool checkWall;
 
     [Header("공격과방어")]
+    [SerializeField] float atk;
+    [SerializeField] float hp;
     float attackCoolTime;
     float attackAnimTime;
-    bool attackCheck;
 
-    //OverlabBoxAll
+    [Header("공격범위 설정")]
     [SerializeField] Transform pos;
     [SerializeField] Vector2 boxSize;
-    
+
+    public void Damage(float damge)
+    {
+        hp = hp - damge;
+    }
+
 
     private void Awake()
     {
@@ -68,6 +77,7 @@ public class Player : MonoBehaviour
         playerJump();
         playerDash();
         playerClimb();
+        speedRanding();
 
         playerAttack();
 
@@ -102,6 +112,15 @@ public class Player : MonoBehaviour
         rigid.velocity = moveDir;
 
         anim.SetBool("isRun", moveDir.x != 0.0f);
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            moveSpeed += runSpeed; 
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            moveSpeed -= runSpeed;
+        }
 
         if (moveDir.x != 0.0f)//플레이어 좌우 변경
         {
@@ -196,6 +215,21 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 빠른 착지
+    /// </summary>
+    private void speedRanding()
+    {
+        if(Input.GetKey (KeyCode.S))
+        {
+            rigid.gravityScale = defaultGravity * 100;
+        }
+        else if(Input.GetKeyUp (KeyCode.S))
+        {
+            jumpForce = defaultGravity / 100;
+        }
+    }
+
+    /// <summary>
     /// 공격하기
     /// </summary>
     private void playerAttack()
@@ -213,7 +247,7 @@ public class Player : MonoBehaviour
             {
                 if (collider.tag == "Enemy")
                 {
-                    Debug.Log("충돌");
+                    collider.GetComponent<Enemy>().Damage(atk);
                 }
             }
         }
@@ -267,9 +301,6 @@ public class Player : MonoBehaviour
             case HitBox.enumHitType.WallCheck:
                 checkWall = true;
                 break;
-            case HitBox.enumHitType.EnemyCheck:
-                attackCheck = true;
-                break;
 
         }
     }
@@ -286,9 +317,7 @@ public class Player : MonoBehaviour
             case HitBox.enumHitType.WallCheck:
                 checkWall = false;
                 break;
-            case HitBox.enumHitType.EnemyCheck:
-                attackCheck = false;
-                break;
+                
         }
     }
 
