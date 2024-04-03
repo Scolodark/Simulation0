@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     [Header("벽타기")]
     [SerializeField] float climbTime;
     float climbTimer;
-    bool checkWall;
+    Collider2D climbCheckColl;
 
     [Header("공격과방어")]
     [SerializeField] float atk;
@@ -43,13 +43,27 @@ public class Player : MonoBehaviour
     float attackCoolTime;
     float attackAnimTime;
 
+    [Header("피격 설정")]
+    [SerializeField] float safeTime;
+    float safeTimer;
+
     [Header("공격범위 설정")]
     [SerializeField] Transform pos;
     [SerializeField] Vector2 boxSize;
 
+
+    /// <summary>
+    /// 적의 공격을 받을때
+    /// </summary>
+    /// <param name="damge"></param>
     public void Damage(float damge)
     {
-        hp = hp - damge;
+        if(safeTimer == 0)
+        {
+            hp = hp - damge;
+            anim.SetTrigger("isDamage");
+            safeTimer = safeTime;
+        }
     }
 
 
@@ -59,6 +73,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         boxColl = GetComponent<BoxCollider2D>();
         tr = GetComponent<TrailRenderer>();
+        climbCheckColl = transform.GetChild(1).GetComponent<Collider2D>();
 
         tr.enabled = false;
     }
@@ -106,8 +121,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerMove()
     {
-        
         moveDir.x = Input.GetAxisRaw("Horizontal") * (moveSpeed + doDash);//플레이어 이동
+
         moveDir.y = rigid.velocity.y;
         rigid.velocity = moveDir;
 
@@ -205,11 +220,15 @@ public class Player : MonoBehaviour
             climbTimer = climbTime;
         }
 
-        if (moveDir.x != 0)
+        if (climbCheckColl.IsTouchingLayers(LayerMask.GetMask("Ground")) == true ||
+            climbCheckColl.IsTouchingLayers(LayerMask.GetMask("Wall")) == true)
         {
-            if (checkWall == true && climbTimer > 0f)
+            if (moveDir.x != 0)
             {
-                rigid.velocity = new Vector2(moveDir.x, jumpForce * 0.5f);
+                if (climbTimer > 0f)
+                {
+                    rigid.velocity = new Vector2(moveDir.x, jumpForce * 0.5f);
+                }
             }
         }
     }
@@ -270,7 +289,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if(attackCoolTime > 0f)
+        if(attackCoolTime > 0f)//공격쿨타임
         {
             attackCoolTime -= Time.deltaTime;
             if(attackCoolTime < 0f)
@@ -279,12 +298,21 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (climbTimer > 0f)
+        if (climbTimer > 0f)//벽타기제한시간
         {
             climbTimer -= Time.deltaTime;
             if (climbTimer < 0f)
             {
                 climbTimer = 0f;
+            }
+        }
+
+        if (safeTimer > 0f)//피격쿨타임
+        {
+            safeTimer -= Time.deltaTime;
+            if (safeTimer < 0f)
+            {
+                safeTimer = 0f;
             }
         }
     }
@@ -294,32 +322,32 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="_hitType"></param>
     /// <param name="_coll"></param>
-    public void TriggerEnter(HitBox.enumHitType _hitType, Collider2D _coll)
-    {
-        switch (_hitType)
-        {
-            case HitBox.enumHitType.WallCheck:
-                checkWall = true;
-                break;
+    //public void TriggerEnter(HitBox.enumHitType _hitType, Collider2D _coll)
+    //{
+    //    switch (_hitType)
+    //    {
+    //        case HitBox.enumHitType.WallCheck:
+    //            checkWall = true;
+    //            break;
 
-        }
-    }
+    //    }
+    //}
 
-    /// <summary>
-    /// 히트박스 나옴
-    /// </summary>
-    /// <param name="_hitType"></param>
-    /// <param name="_coll"></param>
-    public void TriggerExit(HitBox.enumHitType _hitType, Collider2D _coll)
-    {
-        switch (_hitType)
-        {
-            case HitBox.enumHitType.WallCheck:
-                checkWall = false;
-                break;
+    ///// <summary>
+    ///// 히트박스 나옴
+    ///// </summary>
+    ///// <param name="_hitType"></param>
+    ///// <param name="_coll"></param>
+    //public void TriggerExit(HitBox.enumHitType _hitType, Collider2D _coll)
+    //{
+    //        switch (_hitType)
+    //    {
+    //        case HitBox.enumHitType.WallCheck:
+    //            checkWall = false;
+    //            break;
                 
-        }
-    }
+    //    }
+    //}
 
     private void OnDrawGizmos()
     {

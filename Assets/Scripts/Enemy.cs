@@ -85,6 +85,11 @@ public class Enemy : MonoBehaviour
         transform.localScale = localScale;
     }
 
+
+    /// <summary>
+    /// 플레이어 공격
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
