@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     [Header("피격 설정")]
     [SerializeField] float safeTime;
     float safeTimer;
+    SpriteRenderer spr;
 
     [Header("공격범위 설정")]
     [SerializeField] Transform pos;
@@ -74,6 +75,7 @@ public class Player : MonoBehaviour
         boxColl = GetComponent<BoxCollider2D>();
         tr = GetComponent<TrailRenderer>();
         climbCheckColl = transform.GetChild(1).GetComponent<Collider2D>();
+        spr = GetComponent<SpriteRenderer>();
 
         tr.enabled = false;
     }
@@ -95,6 +97,8 @@ public class Player : MonoBehaviour
         speedRanding();
 
         playerAttack();
+
+        hitSprite();
 
         checkGround();
         coolTimeTimer();
@@ -273,6 +277,21 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 피격후 무적타임 효과
+    /// </summary>
+    private void hitSprite()
+    {
+        if(safeTimer > 0)
+        {
+            setPlayerColorAlpha(0.5f);
+        }
+        else
+        {
+            setPlayerColorAlpha(1f);
+        }
+    }
+
+    /// <summary>
     /// 타이머 기능
     /// </summary>
     private void coolTimeTimer()
@@ -353,6 +372,13 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(pos.position, boxSize);
+    }
+
+    private void setPlayerColorAlpha(float _a)
+    {
+        Color color = spr.color;
+        color.a = _a;
+        spr.color = color;
     }
 
 }
