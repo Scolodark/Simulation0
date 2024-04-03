@@ -51,6 +51,9 @@ public class Player : MonoBehaviour
     [Header("공격범위 설정")]
     [SerializeField] Transform pos;
     [SerializeField] Vector2 boxSize;
+    SpriteRenderer sprAttack;
+    bool attackAlphaCheck;
+    float attackAlpha;
 
 
     /// <summary>
@@ -76,6 +79,7 @@ public class Player : MonoBehaviour
         tr = GetComponent<TrailRenderer>();
         climbCheckColl = transform.GetChild(1).GetComponent<Collider2D>();
         spr = GetComponent<SpriteRenderer>();
+        sprAttack = transform.GetChild(3).GetComponent<SpriteRenderer>();
 
         tr.enabled = false;
     }
@@ -86,6 +90,8 @@ public class Player : MonoBehaviour
         dashVertical = jumpForce;
         doDash = 0f;
         dashCheck = true;
+
+        setAttackEffectAlpha(0f);
     }
 
     void Update()
@@ -257,9 +263,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerAttack()
     {
+
         if (Input.GetMouseButtonDown(0) && attackCoolTime == 0)
         {
-
+            StartCoroutine(FadeInOut());
             anim.SetTrigger("isAttack");
             attackAnimTime = anim.GetCurrentAnimatorStateInfo(0).length;//애니메이션 쿨타임
             attackCoolTime = attackAnimTime *0.7f;
@@ -368,17 +375,44 @@ public class Player : MonoBehaviour
     //    }
     //}
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmos()//공격범위 표시
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(pos.position, boxSize);
     }
 
-    private void setPlayerColorAlpha(float _a)
+    private void setPlayerColorAlpha(float _a)//플레이어 알파값
     {
         Color color = spr.color;
         color.a = _a;
         spr.color = color;
+    }
+
+    private void setAttackEffectAlpha(float _a)//공격이펙트 알파값
+    {
+        Color color = sprAttack.color;
+        color.a = _a;
+        sprAttack.color = color;
+    }
+
+    IEnumerator FadeInOut()
+    {
+        float ratio = 0.0f;
+
+        while (attackAlpha < 1.0f)
+        {
+            attackAlpha = Mathf.Lerp(0f, 1.0f, ratio);
+            ratio += Time.deltaTime/0.5f;
+            setAttackEffectAlpha(attackAlpha);
+            yield return null;
+        }
+        while (attackAlpha > 0.0f)
+        {
+            attackAlpha = Mathf.Lerp(1.0f, 0.0f, ratio);
+            ratio += Time.deltaTime / 0.5f;
+            setAttackEffectAlpha(attackAlpha);
+            yield return null;
+        }
     }
 
 }
