@@ -19,6 +19,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] float hp;
     [SerializeField] float atk;
 
+    [Header("프리펩")]
+    [SerializeField] GameObject deathEffect;
+    GameObject deathEffectSub;//참조
+
     public void Damage(float damge)
     {
         hp = hp - damge;
@@ -46,6 +50,7 @@ public class Enemy : MonoBehaviour
     {
         slimeJump();
         jumpTimeCheck();
+        death();
     }
 
     /// <summary>
@@ -70,8 +75,6 @@ public class Enemy : MonoBehaviour
         {
             rigid.velocity = new Vector2(0, rigid.velocity.y);
         }
-
-
     }
 
     /// <summary>
@@ -111,5 +114,22 @@ public class Enemy : MonoBehaviour
                 jumpTimer = 0f;
             }
         }
+    }
+
+    private void death()
+    {
+        if(hp <= 0)
+        {
+            deathEffectPrefabs();
+            Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 점프 이펙트 프리펩 생성
+    /// </summary>
+    private void deathEffectPrefabs()
+    {
+        Destroy(Instantiate(deathEffect,transform.position,Quaternion.identity), 0.4f);
     }
 }

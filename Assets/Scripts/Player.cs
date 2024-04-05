@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
     [Header("공격과방어")]
     [SerializeField] float atk;
     [SerializeField] float hp;
+    [SerializeField] float parryingDamage;
+    bool parryingCheck;
     float attackCoolTime;
     float attackAnimTime;
 
@@ -47,6 +49,7 @@ public class Player : MonoBehaviour
     [SerializeField] float safeTime;
     float safeTimer;
     SpriteRenderer spr;
+    bool hitDamageCheck;
 
     [Header("공격범위 설정")]
     [SerializeField] Transform pos;
@@ -55,6 +58,22 @@ public class Player : MonoBehaviour
     bool attackAlphaCheck;
     float attackAlpha;
 
+    //적 록온
+    [Header("적 감지와 락온")]
+    [SerializeField] Vector2 overlapBoxSize;
+    bool enemyCheck;
+    int mouseButtonCheck;
+    SpriteRenderer sprLockOn;
+
+    [Header("프리펩")]
+    [SerializeField] GameObject jumpEffect;
+    GameObject jumpEffectSup;
+
+    [Header("카메라효과")]
+    [SerializeField] Camera cameraInsert;
+    int hitCheckCount;
+    bool hitCountbool;
+
 
     /// <summary>
     /// 적의 공격을 받을때
@@ -62,11 +81,28 @@ public class Player : MonoBehaviour
     /// <param name="damge"></param>
     public void Damage(float damge)
     {
+        if (parryingCheck == true) return;
+
         if(safeTimer == 0)
         {
             hp = hp - damge;
             anim.SetTrigger("isDamage");
             safeTimer = safeTime;
+        }
+    }
+
+    /// <summary>
+    /// 데미지를 받았는지 체크
+    /// </summary>
+    private void damageCheck()
+    {
+        if(safeTimer != 0)
+        {
+            hitDamageCheck = true;
+        }
+        else
+        {
+            hitDamageCheck = false;
         }
     }
 
@@ -80,6 +116,7 @@ public class Player : MonoBehaviour
         climbCheckColl = transform.GetChild(1).GetComponent<Collider2D>();
         spr = GetComponent<SpriteRenderer>();
         sprAttack = transform.GetChild(3).GetComponent<SpriteRenderer>();
+        sprLockOn = transform.GetChild(4).GetComponent<SpriteRenderer>();
 
         tr.enabled = false;
     }
@@ -103,11 +140,18 @@ public class Player : MonoBehaviour
         speedRanding();
 
         playerAttack();
+        parrying();
 
         hitSprite();
 
         checkGround();
+        enemyLockOn();
         coolTimeTimer();
+
+        damageCheck();
+
+        lockOnEffect();
+        hitCameraEffect();
     }
 
     /// <summary>
@@ -124,6 +168,35 @@ public class Player : MonoBehaviour
         {
             isGround = true;
         }
+    }
+
+    /// <summary>
+    /// 적이 있을때 체크
+    /// </summary>
+    private void enemyLockOn()
+    {
+
+        Collider2D detectEnemy = Physics2D.OverlapBox(pos.position,overlapBoxSize, 0f, LayerMask.GetMask("Monster"));
+
+        if (detectEnemy)
+        {
+                if (Input.GetMouseButtonDown(2))
+                {
+                    enemyCheck = true;
+                    mouseButtonCheck += 1;
+                }
+
+                if (mouseButtonCheck == 2)
+                {
+                    mouseButtonCheck = 0;
+                    enemyCheck = false;
+                }
+        }
+        else
+        {
+            enemyCheck = false;
+        }
+        
     }
 
     /// <summary>
@@ -147,7 +220,7 @@ public class Player : MonoBehaviour
             moveSpeed -= runSpeed;
         }
 
-        if (moveDir.x != 0.0f)//플레이어 좌우 변경
+        if (moveDir.x != 0.0f && enemyCheck == false)//플레이어 좌우 변경
         {
             Vector3 localScale = transform.localScale;
             localScale.x = Input.GetAxisRaw("Horizontal") * -1;
@@ -164,12 +237,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGround == true && jumpCheck == true)//최대점프
         {
             rigid.velocity = new Vector2(moveDir.x, jumpForce);
-            jumpCheck = false;
-           
+            jumpEffectPrefabs();
+            
         }
-        else if(Input.GetKeyUp(KeyCode.Space) && moveDir.y > 0f && jumpCheck == true && isGround == true)//숏점프
+        else if(Input.GetKeyUp(KeyCode.Space) && moveDir.y > 0f && jumpCheck == true)//숏점프
         {
             rigid.velocity = new Vector2(moveDir.x, jumpForce*0.5f);
+            jumpCheck = false;
         }
 
         anim.SetBool("isJump", isGround != true);
@@ -263,21 +337,48 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerAttack()
     {
+        if (hitDamageCheck == true) return;//공격받는 도중 공격 불가
 
         if (Input.GetMouseButtonDown(0) && attackCoolTime == 0)
         {
-            StartCoroutine(FadeInOut());
+            sprAttack.color = new Color(1,0,0);
+            StartCoroutine(FadeInOut());//이팩트 표시
             anim.SetTrigger("isAttack");
             attackAnimTime = anim.GetCurrentAnimatorStateInfo(0).length;//애니메이션 쿨타임
             attackCoolTime = attackAnimTime *0.7f;
 
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);//공격 범위
 
-            foreach(Collider2D collider in collider2Ds)//잘모름
+            foreach(Collider2D collider in collider2Ds)//적에게 데미지
             {
                 if (collider.tag == "Enemy")
                 {
                     collider.GetComponent<Enemy>().Damage(atk);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 패링
+    /// </summary>
+    private void parrying()
+    {
+        if (hitDamageCheck == true) return;
+
+        if (Input.GetMouseButtonDown(1) && attackCoolTime == 0)
+        {
+            sprAttack.color = new Color(0, 0, 1);
+            StartCoroutine(FadeInOut());//이팩트 표시
+            anim.SetTrigger("isAttack");
+
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
+
+            foreach (Collider2D collider in collider2Ds)//적에게 데미지
+            {
+                if (collider.tag == "Enemy")
+                {
+                    collider.GetComponent<Enemy>().Damage(parryingDamage);
                 }
             }
         }
@@ -343,43 +444,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 히트박스 들어옴
-    /// </summary>
-    /// <param name="_hitType"></param>
-    /// <param name="_coll"></param>
-    //public void TriggerEnter(HitBox.enumHitType _hitType, Collider2D _coll)
-    //{
-    //    switch (_hitType)
-    //    {
-    //        case HitBox.enumHitType.WallCheck:
-    //            checkWall = true;
-    //            break;
-
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 히트박스 나옴
-    ///// </summary>
-    ///// <param name="_hitType"></param>
-    ///// <param name="_coll"></param>
-    //public void TriggerExit(HitBox.enumHitType _hitType, Collider2D _coll)
-    //{
-    //        switch (_hitType)
-    //    {
-    //        case HitBox.enumHitType.WallCheck:
-    //            checkWall = false;
-    //            break;
-                
-    //    }
-    //}
-
-    private void OnDrawGizmos()//공격범위 표시
+    private void OnDrawGizmos()//공격범위표시
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(pos.position, boxSize);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(pos.position, overlapBoxSize);
     }
+    
 
     private void setPlayerColorAlpha(float _a)//플레이어 알파값
     {
@@ -395,23 +468,73 @@ public class Player : MonoBehaviour
         sprAttack.color = color;
     }
 
+    /// <summary>
+    /// 공격 이펙트 설정
+    /// </summary>
+    /// <returns></returns>
     IEnumerator FadeInOut()
     {
         float ratio = 0.0f;
 
-        while (attackAlpha < 1.0f)
+        while (attackAlpha < 1.0f)//알파값이 1->0으로 서서히 이동
         {
+            if (Input.GetMouseButtonDown(1) && attackCoolTime == 0)
+            {
+                parryingCheck = true;
+            }
             attackAlpha = Mathf.Lerp(0f, 1.0f, ratio);
             ratio += Time.deltaTime/0.5f;
             setAttackEffectAlpha(attackAlpha);
             yield return null;
         }
-        while (attackAlpha > 0.0f)
+        while (attackAlpha > 0.0f)//알파값이 0->1로 서서히 이동
         {
+            parryingCheck = false;
             attackAlpha = Mathf.Lerp(1.0f, 0.0f, ratio);
             ratio += Time.deltaTime / 0.5f;
             setAttackEffectAlpha(attackAlpha);
             yield return null;
+        }
+    }
+
+    /// <summary>
+    /// 락온 이펙트 설정
+    /// </summary>
+    private void lockOnEffect()
+    {
+        if(enemyCheck == true)
+            sprLockOn.gameObject.SetActive(true);
+        else
+            sprLockOn.gameObject.SetActive(false);
+    }
+
+
+    /// <summary>
+    /// 점프 이펙트 프리펩 생성과 파괴
+    /// </summary>
+    private void jumpEffectPrefabs()
+    {
+        Destroy(Instantiate(jumpEffect,transform.position,Quaternion.identity), 0.4f);
+    }
+
+    private void hitCameraEffect()
+    {
+        if (hitDamageCheck == true && hitCountbool == false)
+        {
+            hitCheckCount += 1;
+
+        }
+        else if(hitDamageCheck == false)
+        {
+            hitCountbool = false;
+        }
+
+        if (hitCheckCount == 1)
+        {
+            hitCheckCount = 0;
+            hitCountbool = true;
+            cameraInsert.GetComponent<CameraShake>().ShakeCamera(0.1f);
+            Debug.Log("확인");
         }
     }
 

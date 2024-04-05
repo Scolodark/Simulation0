@@ -197,8 +197,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: -2
   jumpTime: 1
-  hp: 5
+  hp: 1
   atk: 1
+  deathEffect: {fileID: 1967835574231978638, guid: 3e196c9e632c76841a71cb6e2dc6d010, type: 3}
 --- !u!1 &5543973760411526825
 GameObject:
   m_ObjectHideFlags: 0
