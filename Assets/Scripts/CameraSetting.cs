@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraShake : MonoBehaviour
+public class CameraSetting : MonoBehaviour
 {
     [Header("카메라 흔들기")]
     [SerializeField] Transform player;
@@ -37,5 +37,10 @@ public class CameraShake : MonoBehaviour
         }
 
         transform.position = mainPosition;
+    }
+
+    private void cameraMovedistance()
+    {
+
     }
 }

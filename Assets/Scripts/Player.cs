@@ -254,7 +254,7 @@ public class Player : MonoBehaviour
         }
         else if (moveDir.y <= 1f && moveDir.y >= 0f)//최고 높이 유지 보너스
         {
-            rigid.gravityScale = defaultGravity * 0.19f;
+            rigid.gravityScale = defaultGravity * 0.2f;
         }
         else//상승할때 기본 중력으로 복귀
         {
@@ -533,9 +533,8 @@ public class Player : MonoBehaviour
         {
             hitCheckCount = 0;
             hitCountbool = true;
-            cameraInsert.GetComponent<CameraShake>().ShakeCamera(0.1f);
+            cameraInsert.GetComponent<CameraSetting>().ShakeCamera(0.1f);
             Debug.Log("확인");
         }
     }
-
 }
