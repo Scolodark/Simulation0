@@ -61,6 +61,8 @@ public class Player : MonoBehaviour
     //적 록온
     [Header("적 감지와 락온")]
     [SerializeField] Vector2 overlapBoxSize;
+    [SerializeField] GameObject boss;
+    [SerializeField] BoxCollider2D enemyCheckColl;
     bool enemyCheck;
     int mouseButtonCheck;
     SpriteRenderer sprLockOn;
@@ -146,6 +148,8 @@ public class Player : MonoBehaviour
 
         checkGround();
         enemyLockOn();
+        bossChecking();
+
         coolTimeTimer();
 
         damageCheck();
@@ -180,23 +184,46 @@ public class Player : MonoBehaviour
 
         if (detectEnemy)
         {
-                if (Input.GetMouseButtonDown(2))
-                {
-                    enemyCheck = true;
-                    mouseButtonCheck += 1;
-                }
+            if (Input.GetMouseButtonDown(2))
+            {
+                
+                
+                enemyCheck = true;
+                mouseButtonCheck += 1;
+            }
 
-                if (mouseButtonCheck == 2)
-                {
-                    mouseButtonCheck = 0;
-                    enemyCheck = false;
-                }
+            if (mouseButtonCheck == 2)
+            {
+                mouseButtonCheck = 0;
+                enemyCheck = false;
+            }
         }
         else
         {
             enemyCheck = false;
         }
         
+    }
+
+    /// <summary>
+    /// 보스 위치 확인
+    /// </summary>
+    private void bossChecking()
+    {
+        if (enemyCheck == true)
+        {
+            enemyCheckColl.gameObject.SetActive(true);
+            if (enemyCheckColl.IsTouchingLayers(LayerMask.GetMask("Monster")) != true)
+            {
+                Vector3 localScale = transform.localScale;
+                localScale.x *= -1;
+                transform.localScale = localScale;
+            }
+        }
+        else
+        {
+            enemyCheckColl.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -449,7 +476,7 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(pos.position, boxSize);
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.yellow;//적 인식 범위
         Gizmos.DrawWireCube(pos.position, overlapBoxSize);
     }
     
@@ -503,9 +530,14 @@ public class Player : MonoBehaviour
     private void lockOnEffect()
     {
         if(enemyCheck == true)
+        {
             sprLockOn.gameObject.SetActive(true);
+        }
         else
+        {
             sprLockOn.gameObject.SetActive(false);
+        }
+            
     }
 
 
@@ -534,7 +566,6 @@ public class Player : MonoBehaviour
             hitCheckCount = 0;
             hitCountbool = true;
             cameraInsert.GetComponent<CameraSetting>().ShakeCamera(0.1f);
-            Debug.Log("확인");
         }
     }
 }
