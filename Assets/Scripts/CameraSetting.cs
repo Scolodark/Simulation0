@@ -10,9 +10,12 @@ public class CameraSetting : MonoBehaviour
     float shakeTime;
     Vector3 mainPosition;
     float camPosY;
+    bool isShaking;
 
     [Header("카메라 위치 한계설정")]
     [SerializeField] BoxCollider2D boxCollider;
+    [SerializeField] BoxCollider2D bossRoomBoxColl;
+    [SerializeField] GameObject sendObj;
     Camera cam;
     Bounds bounds;
     
@@ -32,6 +35,7 @@ public class CameraSetting : MonoBehaviour
 
     private void Start()
     {
+        bounds = boxCollider.bounds;//백그라운드로 부터 바운드 크기를 복사해옴, 콜바이 벨류
         cam = Camera.main;
         checkBound();
     }
@@ -43,8 +47,6 @@ public class CameraSetting : MonoBehaviour
     {
         float heigh = cam.orthographicSize;
         float width = heigh * cam.aspect;
-
-        bounds = boxCollider.bounds;//백그라운드로 부터 바운드 크기를 복사해옴, 콜바이 벨류
 
         float minX = bounds.min.x + width;//X를 카메라 크기만큼 우측으로
         float maxX = bounds.extents.x - width;//X를 카메라 크기만큼 좌측으로
@@ -59,19 +61,32 @@ public class CameraSetting : MonoBehaviour
     private void Update()
     {
         camPosY = player.position.y + 1.5f;
-        mainPosition = new Vector3(player.position.x, camPosY, -10f);
-        //camMoveDistance();
+        mainPosition = new Vector3(player.position.x, camPosY, cam.transform.position.z);
+        boundsType();
+        camMoveDistance();
     }
 
+    private void boundsType()
+    {
+        if(cam.transform.position.x == sendObj.transform.position.x)
+        {
+            bounds = bossRoomBoxColl.bounds;
+        }
+    }
+
+    /// <summary>
+    /// 카메라 움직임 범위 작동
+    /// </summary>
     private void camMoveDistance()
     {
-        if (player == null)
+        
+        if (player == null || isShaking == true)
         {
             return;
         }
 
         cam.transform.position = new Vector3(Mathf.Clamp(player.transform.position.x, bounds.min.x, bounds.max.x),
-            Mathf.Clamp(player.transform.position.y, bounds.min.y, bounds.max.y), cam.transform.position.z);
+            Mathf.Clamp(player.transform.position.y+1.5f, bounds.min.y, bounds.max.y), cam.transform.position.z);
     }
 
     /// <summary>
@@ -86,9 +101,12 @@ public class CameraSetting : MonoBehaviour
 
             shakeTime -= Time.deltaTime;
 
+            isShaking = true;
+
             yield return null;
         }
 
         transform.position = mainPosition;
+        isShaking = false;
     }
 }

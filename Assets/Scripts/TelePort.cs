@@ -5,6 +5,7 @@ using UnityEngine;
 public class TelePort : MonoBehaviour
 {
     [SerializeField] GameObject playerObj;
+    [SerializeField] GameObject cam;
     [SerializeField] GameObject sendObj;
 
     /// <summary>
@@ -35,6 +36,7 @@ public class TelePort : MonoBehaviour
     {
         yield return null;
         playerObj.transform.position = sendObj.transform.position;
+        cam.transform.position = new Vector3 (sendObj.transform.position.x, sendObj.transform.position.y+1.5f, cam.transform.position.z);
     }
 
 }

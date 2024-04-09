@@ -267,7 +267,7 @@ public class Player : MonoBehaviour
             jumpEffectPrefabs();
             
         }
-        else if(Input.GetKeyUp(KeyCode.Space) && moveDir.y > 0f && jumpCheck == true)//ºÙ¡°«¡
+        else if(Input.GetKeyUp(KeyCode.Space) && moveDir.y > 0f && jumpCheck == true && isGround == true)//ºÙ¡°«¡
         {
             rigid.velocity = new Vector2(moveDir.x, jumpForce*0.5f);
             jumpCheck = false;

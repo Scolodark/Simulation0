@@ -6,18 +6,22 @@ public class Boss : MonoBehaviour
 {
     [Header("이동")]
     [SerializeField] float speed;
+    Vector3 trueScale;
+    Vector3 falseScale;
     Rigidbody2D rigid;
 
     Animator anim;
 
     [Header("플레이어 추적")]
     [SerializeField] GameObject player;
-    bool rayCheck;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        trueScale = transform.localScale;
+        falseScale = transform.localScale;
+        trueScale.x *= -1f;
     }
 
     private void FixedUpdate()
@@ -52,7 +56,8 @@ public class Boss : MonoBehaviour
                 rigid.velocity = new Vector2(0, rigid.velocity.y);
                 return;
             }
-            else if (hit.transform.CompareTag("Player") == true)
+
+            if (hit.transform.CompareTag("Player") == true)
             {
                 anim.SetBool("isMove", true);
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
@@ -62,12 +67,16 @@ public class Boss : MonoBehaviour
                 //변경
 
                 bool isRight = (player.transform.position - transform.position).x > 0;//플레이어가 보스의 뒤로 갈때 true가 됨
-                if (isRight)
+                if (isRight != true)
                 {
-                    
+                    rigid.velocity = new Vector2(-speed, rigid.velocity.y);
+                    transform.localScale = falseScale;
                 }
-
-
+                else if (isRight)
+                {
+                    rigid.velocity = new Vector2(speed, rigid.velocity.y);
+                    transform.localScale = trueScale;
+                }
                 Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.green);
             }
             //else if (hit.transform.CompareTag("Player") == false)
