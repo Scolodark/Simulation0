@@ -531,10 +531,12 @@ public class Player : MonoBehaviour
     {
         if(enemyCheck == true)
         {
+            anim.SetBool("Battle", true);
             sprLockOn.gameObject.SetActive(true);
         }
         else
         {
+            anim.SetBool("Battle", false);
             sprLockOn.gameObject.SetActive(false);
         }
             
