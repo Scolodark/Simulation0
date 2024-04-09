@@ -7,6 +7,10 @@ public class TelePort : MonoBehaviour
     [SerializeField] GameObject playerObj;
     [SerializeField] GameObject sendObj;
 
+    /// <summary>
+    /// 플레이어 확인
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -15,6 +19,10 @@ public class TelePort : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 플레이어 이동
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && sendObj != null)

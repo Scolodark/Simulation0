@@ -116,6 +116,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// 체력이 모두 떨어질때
+    /// </summary>
     private void death()
     {
         if(hp <= 0)
