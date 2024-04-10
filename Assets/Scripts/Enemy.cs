@@ -130,7 +130,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// 점프 이펙트 프리펩 생성
+    ///  사망 이펙트 프리펩 생성
     /// </summary>
     private void deathEffectPrefabs()
     {

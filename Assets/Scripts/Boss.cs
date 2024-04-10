@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
+    [Header("능력치")]
+    [SerializeField] float hp;
+    [SerializeField] float atk;
+
     [Header("이동")]
     [SerializeField] float speed;
     Vector3 trueScale;
@@ -14,6 +18,18 @@ public class Boss : MonoBehaviour
 
     [Header("플레이어 추적")]
     [SerializeField] GameObject player;
+
+    [Header("근접공격 기능")]
+    [SerializeField] Collider2D playerCloseUpCheckColl;
+    [SerializeField] Transform CloseAttackPos;
+    [SerializeField] Vector2 CloseAttackCover;
+    bool closeAttack;
+
+    public void Damage(float damge)
+    {
+            hp = hp - damge;
+            anim.SetTrigger("isDamage");
+    }
 
     void Start()
     {
@@ -31,7 +47,7 @@ public class Boss : MonoBehaviour
 
     void Update()
     {
-        
+        attackCheck();
     }
 
     /// <summary>
@@ -49,7 +65,7 @@ public class Boss : MonoBehaviour
         {
             
 
-            if (hit.transform.tag == "Wall" || hit.transform.tag == "Ground")
+            if (hit.transform.tag == "Wall" || hit.transform.tag == "Ground" || closeAttack == true)
             {
                 anim.SetBool("isMove", false);
                 Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
@@ -79,49 +95,43 @@ public class Boss : MonoBehaviour
                 }
                 Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.green);
             }
-            //else if (hit.transform.CompareTag("Player") == false)
-            //{
-            //    speed *= -1f;
-            //    Vector3 localScale = transform.localScale;
-            //    localScale.x *= -1;
-            //    transform.localScale = localScale;
-
-            //    Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
-            //}
         }
         else
         {
             rigid.velocity = new Vector2(0, rigid.velocity.y);
         }
-
-
-        //int count = ray.Length;
-        //for (int iNum = 0; iNum < count; ++iNum)
-        //{
-        //    RaycastHit2D rayCheck = ray[iNum]; 
-        //    if (rayCheck.collider.CompareTag("Wall") || rayCheck.collider.CompareTag("Monster"))
-        //    {
-        //        Debug.Log("벽");
-        //        return;
-        //    }
-
-        //    if (rayCheck.collider.CompareTag("Player") == true)
-        //    {
-        //        anim.SetBool("isMove", true);
-        //        rigid.velocity = new Vector2(-speed, rigid.velocity.y);
-        //        Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.green);
-        //    }
-        //    else if (rayCheck.collider.CompareTag("Player") == false)
-        //    {
-        //        speed *= -1f;
-        //        Vector3 localScale = transform.localScale;
-        //        localScale.x *= -1;
-        //        transform.localScale = localScale;
-
-        //        Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
-        //    }
-        //}
             
-            
+    }
+
+    private void attackCheck()
+    {
+        if(playerCloseUpCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true)
+        {
+            closeAttack = true;
+            anim.SetTrigger("isAttack");
+
+            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(CloseAttackPos.position, CloseAttackCover, 0);
+
+            int count = collider2Ds.Length;
+            for(int iNum = 0; iNum <count; iNum++)
+            {
+                if (collider2Ds[iNum].gameObject.tag == "Player")
+                {
+                    collider2Ds[iNum].GetComponent<Player>().Damage(atk);
+                }
+            }
+
+
+        }
+        else
+        {
+            closeAttack = false;
+        }
+    }
+
+    private void OnDrawGizmos()//공격범위표시
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(CloseAttackPos.position, CloseAttackCover);
     }
 }

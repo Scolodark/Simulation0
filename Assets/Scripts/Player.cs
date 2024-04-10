@@ -382,6 +382,10 @@ public class Player : MonoBehaviour
                 {
                     collider.GetComponent<Enemy>().Damage(atk);
                 }
+                else if(collider.tag == "Boss")
+                {
+                    collider.GetComponent<Boss>().Damage(atk);
+                }
             }
         }
     }
@@ -398,6 +402,8 @@ public class Player : MonoBehaviour
             sprAttack.color = new Color(0, 0, 1);
             StartCoroutine(FadeInOut());//이팩트 표시
             anim.SetTrigger("isAttack");
+            attackAnimTime = anim.GetCurrentAnimatorStateInfo(0).length;//애니메이션 쿨타임
+            attackCoolTime = attackAnimTime;
 
             Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(pos.position, boxSize, 0);
 
@@ -406,6 +412,10 @@ public class Player : MonoBehaviour
                 if (collider.tag == "Enemy")
                 {
                     collider.GetComponent<Enemy>().Damage(parryingDamage);
+                }
+                else if (collider.tag == "Boss")
+                {
+                    collider.GetComponent<Boss>().Damage(atk);
                 }
             }
         }
