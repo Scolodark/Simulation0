@@ -24,6 +24,14 @@ public class Boss : MonoBehaviour
     [SerializeField] Transform CloseAttackPos;
     [SerializeField] Vector2 CloseAttackCover;
     bool closeAttack;
+    bool closeAttacking;
+    bool backStepCheck;
+
+    [Header("원거리공격 기능")]
+    [SerializeField] Collider2D playerLongDistanceCheckColl;
+    bool longDistanceCheck;
+
+    SpriteRenderer spr;
 
     public void Damage(float damge)
     {
@@ -35,6 +43,8 @@ public class Boss : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        spr = GetComponent<SpriteRenderer>();
+
         trueScale = transform.localScale;
         falseScale = transform.localScale;
         trueScale.x *= -1f;
@@ -48,6 +58,7 @@ public class Boss : MonoBehaviour
     void Update()
     {
         attackCheck();
+        longDistanceAttack();
     }
 
     /// <summary>
@@ -61,6 +72,9 @@ public class Boss : MonoBehaviour
         //RaycastHit2D[] ray = Physics2D.RaycastAll (transform.position, player.transform.position - transform.position);
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position, 100.0f, LayerMask.GetMask("Player", "Ground", "Wall"));
+
+        if (backStepCheck == true || longDistanceCheck == true) return;
+
         if (hit)
         {
             
@@ -72,8 +86,9 @@ public class Boss : MonoBehaviour
                 rigid.velocity = new Vector2(0, rigid.velocity.y);
                 return;
             }
+            
 
-            if (hit.transform.CompareTag("Player") == true)
+            if (hit.transform.CompareTag("Player") == true && backStepCheck != true)
             {
                 anim.SetBool("isMove", true);
                 rigid.velocity = new Vector2(-speed, rigid.velocity.y);
@@ -103,29 +118,86 @@ public class Boss : MonoBehaviour
             
     }
 
+    /// <summary>
+    /// 보스의 근접 공격
+    /// </summary>
     private void attackCheck()
     {
         if(playerCloseUpCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true)
         {
             closeAttack = true;
-            anim.SetTrigger("isAttack");
-
-            Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(CloseAttackPos.position, CloseAttackCover, 0);
-
-            int count = collider2Ds.Length;
-            for(int iNum = 0; iNum <count; iNum++)
-            {
-                if (collider2Ds[iNum].gameObject.tag == "Player")
-                {
-                    collider2Ds[iNum].GetComponent<Player>().Damage(atk);
-                }
-            }
-
-
         }
         else
         {
             closeAttack = false;
+            closeAttacking = true;
+        }
+
+        if(closeAttacking == true && closeAttack == true)
+        {
+            anim.SetTrigger("isAttack");
+            StartCoroutine(attackDelay());
+            closeAttacking = false;
+        }
+
+        if (closeAttack == true && closeAttacking == false && backStepCheck == false)//공격 이후 행동
+        {
+            anim.SetTrigger("useSpell");
+        }
+    }
+
+    /// <summary>
+    /// 공격 딜레이
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator attackDelay()
+    {
+        yield return new WaitForSeconds(1.36f);
+
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(CloseAttackPos.position, CloseAttackCover, 0);
+
+        int count = collider2Ds.Length;
+        for (int iNum = 0; iNum < count; iNum++)
+        {
+            if (collider2Ds[iNum].gameObject.tag == "Player")
+            {
+                collider2Ds[iNum].GetComponent<Player>().Damage(atk);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 공격 이후 이동
+    /// </summary>
+    private void backStep()
+    {
+        Color color = spr.color;
+        color.a = 0f;
+        spr.color = color;
+
+        backStepCheck = true;
+
+        if (backStepCheck == true)
+        {
+            rigid.velocity = new Vector2(-rigid.transform.localScale.x * -2f, rigid.velocity.y);
+        }
+    }
+
+    /// <summary>
+    /// 원거리 공격
+    /// </summary>
+    private void longDistanceAttack()
+    {
+        if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true)
+        {
+            Color color = spr.color;
+            color.a = 1f;
+            spr.color = color;
+
+            longDistanceCheck = true;
+
+            backStepCheck = false;
+            rigid.velocity = new Vector2(0f, rigid.velocity.y);
         }
     }
 
