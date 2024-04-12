@@ -10,9 +10,11 @@ public class Boss : MonoBehaviour
 
     [Header("이동")]
     [SerializeField] float speed;
+    [SerializeField] Collider2D wallCheckColl;
     Vector3 trueScale;
     Vector3 falseScale;
     Rigidbody2D rigid;
+    bool isWallCheck;
 
     Animator anim;
 
@@ -29,6 +31,8 @@ public class Boss : MonoBehaviour
 
     [Header("원거리공격 기능")]
     [SerializeField] Collider2D playerLongDistanceCheckColl;
+    [SerializeField] Transform longDistanceAttacPos;
+    [SerializeField] Vector2 longDistanceAttackCover;
     bool longDistanceCheck;
 
     SpriteRenderer spr;
@@ -179,7 +183,12 @@ public class Boss : MonoBehaviour
 
         if (backStepCheck == true)
         {
-            rigid.velocity = new Vector2(-rigid.transform.localScale.x * -2f, rigid.velocity.y);
+            rigid.velocity = new Vector2(-rigid.transform.localScale.x * -10f, rigid.velocity.y);
+            if (wallCheckColl.IsTouchingLayers(LayerMask.GetMask("TransparentWall")))
+            {
+                rigid.velocity = new Vector2(0,rigid.velocity.y);
+                isWallCheck = true;
+            }
         }
     }
 
@@ -201,9 +210,20 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()//공격범위표시
+    private void OnDrawGizmos()//근접공격범위표시
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(CloseAttackPos.position, CloseAttackCover);
+
+        longDistanceGizmos();
+    }
+
+    /// <summary>
+    /// 원거리 공격 범위 표시
+    /// </summary>
+    private void longDistanceGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(longDistanceAttacPos.position, longDistanceAttackCover);
     }
 }

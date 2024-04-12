@@ -8,6 +8,7 @@ TagManager:
   - Boss
   - Wall
   - Monster
+  - TransparentWall
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Wall
   - Player
   - Monster
-  - 
+  - TransparentWall
   - 
   - 
   - 

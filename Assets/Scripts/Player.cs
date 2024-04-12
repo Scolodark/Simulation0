@@ -76,6 +76,9 @@ public class Player : MonoBehaviour
     int hitCheckCount;
     bool hitCountbool;
 
+    [Header("사망처리")]
+    [SerializeField] GameObject reSpwObj;
+
 
     /// <summary>
     /// 적의 공격을 받을때
@@ -434,6 +437,16 @@ public class Player : MonoBehaviour
         {
             setPlayerColorAlpha(1f);
         }
+    }
+
+    public void DieEffect()
+    {
+        anim.SetTrigger("Die");
+    }
+    private void RespawnEffect()
+    {
+        anim.SetTrigger("isRespawn");
+        //transform.position = reSpwObj.transform.position;
     }
 
     /// <summary>
