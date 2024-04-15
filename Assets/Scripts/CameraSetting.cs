@@ -16,8 +16,11 @@ public class CameraSetting : MonoBehaviour
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] BoxCollider2D bossRoomBoxColl;
     [SerializeField] GameObject sendObj;
+    [SerializeField] GameObject reSpawnObj;
     Camera cam;
     Bounds bounds;
+
+    bool check;
     
     /// <summary>
     /// Èçµé¸±¶§
@@ -71,6 +74,11 @@ public class CameraSetting : MonoBehaviour
         if(cam.transform.position.x == sendObj.transform.position.x)
         {
             bounds = bossRoomBoxColl.bounds;
+        }
+
+        if(player.transform.position == reSpawnObj.transform.position)
+        {
+            bounds = boxCollider.bounds;
         }
     }
 

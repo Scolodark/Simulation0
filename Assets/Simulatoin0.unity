@@ -302,14 +302,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 799999532}
   - {fileID: 1716195129}
   - {fileID: 1235958186}
   - {fileID: 1929171299}
   - {fileID: 1125591180}
   - {fileID: 1544270217}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &45798015
 MonoBehaviour:
@@ -2804,7 +2803,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &678101671
 BoxCollider2D:
@@ -2895,7 +2894,7 @@ Transform:
   - {fileID: 1339808626}
   - {fileID: 513775007}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &755677854
 GameObject:
@@ -3060,12 +3059,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 799999529}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -37.795486}
+  m_LocalPosition: {x: 7.08, y: 0.83, z: -37.795486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 45798014}
-  m_RootOrder: -1
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &799999533
 MonoBehaviour:
@@ -3084,6 +3083,7 @@ MonoBehaviour:
   boxCollider: {fileID: 755677855}
   bossRoomBoxColl: {fileID: 1525128398}
   sendObj: {fileID: 1078925005}
+  reSpawnObj: {fileID: 678101668}
 --- !u!1 &864180509
 GameObject:
   m_ObjectHideFlags: 0
@@ -3192,7 +3192,7 @@ Transform:
   - {fileID: 864180511}
   - {fileID: 1737571413}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1055671085
 GameObject:
@@ -3270,7 +3270,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1055671088
 MonoBehaviour:
@@ -3285,6 +3285,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 45798015}
+  playerObj: {fileID: 45798009}
+  sendObj: {fileID: 678101668}
+  cam: {fileID: 799999529}
 --- !u!1 &1062643436
 GameObject:
   m_ObjectHideFlags: 0
@@ -3317,8 +3320,9 @@ MonoBehaviour:
   isSpawn: 0
   listEnemy:
   - {fileID: 307594940406532094, guid: 3cdb05852da7acf4daaf5a6c4e61f473, type: 3}
+  - {fileID: 2434323455017610848, guid: e2a6f3346faae1246be6129b338641a9, type: 3}
   spawnTime: 5
-  trsSpawnPoint: {fileID: 0}
+  trsSpawnPoint: {fileID: 6987678190187275589, guid: 9759ba2c32b4915419d69014088f1ee6, type: 3}
 --- !u!4 &1062643438
 Transform:
   m_ObjectHideFlags: 0
@@ -3496,7 +3500,7 @@ Transform:
   - {fileID: 1852294191}
   - {fileID: 1078925009}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1125591179
 GameObject:
@@ -3606,7 +3610,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194524235}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.13, y: 0, z: 0}
+  m_LocalPosition: {x: -9.13, y: 1.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3644,7 +3648,7 @@ Transform:
   - {fileID: 755677856}
   - {fileID: 1525128397}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1235958185
 GameObject:
@@ -13620,7 +13624,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1862207677}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.82, y: 0, z: 0}
+  m_LocalPosition: {x: -1.44, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13868,7 +13872,7 @@ Transform:
   - {fileID: 1194524236}
   - {fileID: 2033999783}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1900113653
 Rigidbody2D:
@@ -13964,7 +13968,10 @@ MonoBehaviour:
   CloseAttackCover: {x: 4.47, y: 4.16}
   playerLongDistanceCheckColl: {fileID: 1862207679}
   longDistanceAttacPos: {fileID: 1194524236}
-  longDistanceAttackCover: {x: 11.49, y: 4.04}
+  longDistanceAttackCover: {x: 11.3, y: 1.19}
+  bullet: {fileID: 2434323455017610848, guid: e2a6f3346faae1246be6129b338641a9, type: 3}
+  bulletCount: 5
+  gameManager: {fileID: 1062643437}
 --- !u!1 &1929171298
 GameObject:
   m_ObjectHideFlags: 0

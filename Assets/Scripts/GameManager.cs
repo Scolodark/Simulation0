@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        checkSpawn();
+        //checkSpawn();
     }
 
     /// <summary>
@@ -47,5 +47,13 @@ public class GameManager : MonoBehaviour
 
         Vector3 newPos = trsSpawnPoint.position;
         GameObject go = Instantiate(objEnemy, newPos, Quaternion.identity);
+    }
+
+    public void bulletSpawn()
+    {
+        GameObject objBullet = listEnemy[1];
+
+        Vector3 newPos = trsSpawnPoint.position;
+        GameObject go = Instantiate(objBullet, newPos, Quaternion.identity);
     }
 }

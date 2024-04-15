@@ -6,6 +6,10 @@ public class Falling : MonoBehaviour
 {
     [SerializeField] Player player;
 
+    [SerializeField] GameObject playerObj;
+    [SerializeField] GameObject sendObj;
+    [SerializeField] GameObject cam;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,5 +20,7 @@ public class Falling : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player.DieEffect();
+        playerObj.transform.position = sendObj.transform.position;
+        //cam.transform.position = new Vector3(sendObj.transform.position.x, sendObj.transform.position.y + 1.5f, cam.transform.position.z);
     }
 }

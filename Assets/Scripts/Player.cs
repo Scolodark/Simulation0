@@ -118,10 +118,10 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         boxColl = GetComponent<BoxCollider2D>();
         tr = GetComponent<TrailRenderer>();
-        climbCheckColl = transform.GetChild(1).GetComponent<Collider2D>();
+        climbCheckColl = transform.GetChild(0).GetComponent<Collider2D>();
         spr = GetComponent<SpriteRenderer>();
-        sprAttack = transform.GetChild(3).GetComponent<SpriteRenderer>();
-        sprLockOn = transform.GetChild(4).GetComponent<SpriteRenderer>();
+        sprAttack = transform.GetChild(2).GetComponent<SpriteRenderer>();
+        sprLockOn = transform.GetChild(3).GetComponent<SpriteRenderer>();
 
         tr.enabled = false;
     }

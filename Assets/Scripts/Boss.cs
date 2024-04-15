@@ -34,8 +34,15 @@ public class Boss : MonoBehaviour
     [SerializeField] Transform longDistanceAttacPos;
     [SerializeField] Vector2 longDistanceAttackCover;
     bool longDistanceCheck;
+    bool longDistanceAttackEnd;
+
+    [Header("Åº¸· »ý¼º")]
+    [SerializeField] GameObject bullet;
+    [SerializeField] int bulletCount;
 
     SpriteRenderer spr;
+
+    [SerializeField] GameManager gameManager;
 
     public void Damage(float damge)
     {
@@ -197,6 +204,7 @@ public class Boss : MonoBehaviour
     /// </summary>
     private void longDistanceAttack()
     {
+
         if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true)
         {
             Color color = spr.color;
@@ -205,8 +213,24 @@ public class Boss : MonoBehaviour
 
             longDistanceCheck = true;
 
-            backStepCheck = false;
+            
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
+        }
+    }
+
+    /// <summary>
+    /// Åº¸· ¼ÒÈ¯
+    /// </summary>
+    private void spawnBullet()
+    {
+        Vector2 pos = longDistanceAttackCover;
+        Instantiate(bullet, pos, Quaternion.identity);
+
+        if (longDistanceAttackEnd == true)
+        {
+            longDistanceCheck = false;
+            backStepCheck = false;
+            longDistanceAttackEnd = false;
         }
     }
 
