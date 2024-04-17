@@ -39,6 +39,7 @@ public class Boss : MonoBehaviour
     [Header("탄막 생성")]
     [SerializeField] GameObject bullet;
     [SerializeField] int bulletCount;
+    [SerializeField] GameObject spawnPointObj;
 
     SpriteRenderer spr;
 
@@ -207,6 +208,8 @@ public class Boss : MonoBehaviour
 
         if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true)
         {
+            spawnPointObj.SetActive(true);
+
             Color color = spr.color;
             color.a = 1f;
             spr.color = color;
@@ -215,6 +218,13 @@ public class Boss : MonoBehaviour
 
             
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
+            longDistanceAttackEnd = true;
+
+            spawnBullet();
+        }
+        else
+        {
+            spawnPointObj.SetActive(false);
         }
     }
 
@@ -223,15 +233,20 @@ public class Boss : MonoBehaviour
     /// </summary>
     private void spawnBullet()
     {
-        Vector2 pos = longDistanceAttackCover;
-        Instantiate(bullet, pos, Quaternion.identity);
 
         if (longDistanceAttackEnd == true)
         {
+            gameManager.bulletSpawn();
+
             longDistanceCheck = false;
             backStepCheck = false;
             longDistanceAttackEnd = false;
         }
+    }
+
+    private void teleportToPlayer()
+    {
+
     }
 
     private void OnDrawGizmos()//근접공격범위표시

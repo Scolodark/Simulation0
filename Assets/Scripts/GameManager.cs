@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] float spawnTime = 1.0f;
     float sTimer = 0.0f; //타이마
-    [SerializeField] Transform trsSpawnPoint;//스폰지점
+    [SerializeField] Transform[] trsSpawnPoint;//스폰지점
+    [SerializeField] GameObject spawnPount;
 
     void Start()
     {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        //checkSpawn();
+        checkSpawn();
     }
 
     /// <summary>
@@ -43,17 +44,25 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void spawnEnemy()
     {
-        GameObject objEnemy = listEnemy[0];
+        GameObject objEnemy = listEnemy[0];//만들어질 몬스터
 
-        Vector3 newPos = trsSpawnPoint.position;
-        GameObject go = Instantiate(objEnemy, newPos, Quaternion.identity);
+        int count = trsSpawnPoint.Length;
+        for (int iNum = 0; iNum < count; ++iNum)
+        { 
+            Vector3 newPos = trsSpawnPoint[iNum].position;
+            GameObject go = Instantiate(objEnemy, newPos, Quaternion.identity);
+        }
     }
 
     public void bulletSpawn()
     {
         GameObject objBullet = listEnemy[1];
 
-        Vector3 newPos = trsSpawnPoint.position;
-        GameObject go = Instantiate(objBullet, newPos, Quaternion.identity);
+        int count = trsSpawnPoint.Length;
+        for (int iNum = 0; iNum < count; ++iNum)
+        {
+            Vector3 newPos = trsSpawnPoint[iNum].position;
+            GameObject go = Instantiate(objBullet, newPos, Quaternion.identity);
+        }
     }
 }
