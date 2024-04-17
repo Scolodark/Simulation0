@@ -17,7 +17,7 @@ public class Falling : MonoBehaviour
     }
 
     
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)//플레이어 추락시 이동
     {
         player.DieEffect();
         playerObj.transform.position = sendObj.transform.position;

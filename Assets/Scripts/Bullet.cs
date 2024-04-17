@@ -22,6 +22,9 @@ public class Bullet : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 탄막의 플레이어 공격 범위
+    /// </summary>
     private void atkPlayer()
     {
         if (isAtk != true)

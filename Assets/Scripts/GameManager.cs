@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Åº¸· ½ºÆù
+    /// </summary>
     public void bulletSpawn()
     {
         GameObject objBullet = listEnemy[1];

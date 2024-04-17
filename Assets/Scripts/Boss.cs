@@ -28,6 +28,7 @@ public class Boss : MonoBehaviour
     bool closeAttack;
     bool closeAttacking;
     bool backStepCheck;
+    bool invincible;
 
     [Header("원거리공격 기능")]
     [SerializeField] Collider2D playerLongDistanceCheckColl;
@@ -45,14 +46,29 @@ public class Boss : MonoBehaviour
 
     [SerializeField] GameManager gameManager;
 
+    [Header("플레이어를 향해 순간이동")]
+    [SerializeField] Collider2D teleportCheckColl;
+
+    [Header("2페이즈")]
+    bool phase;
+    float fullHp;
+
+    [Header("사망")]
+    bool deathCheck;
+
     public void Damage(float damge)
     {
+        if(invincible == false)
+        {
             hp = hp - damge;
             anim.SetTrigger("isDamage");
+            //공격받을때 색이 바뀜
+        }
     }
 
     void Start()
     {
+        fullHp = hp;
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spr = GetComponent<SpriteRenderer>();
@@ -71,6 +87,41 @@ public class Boss : MonoBehaviour
     {
         attackCheck();
         longDistanceAttack();
+        teleportToPlayer();
+        phaseChack();
+        death();
+    }
+
+    /// <summary>
+    /// 페이즈 전환
+    /// </summary>
+    private void phaseChack()
+    {
+        if (fullHp/2 >= hp)
+        {
+            phase = true;
+        }
+
+        if(phase == true)
+        {
+            //보스색 변경
+            //애니메이션 속도 2배
+            //이동속도 2배
+            //일반 몬스터 소환
+        }
+    }
+
+    private void death()//죽음 확인
+    {
+        if (hp <= 0 && deathCheck == false)
+        {
+            anim.SetTrigger("isDeath");
+            deathCheck = true;
+        }
+    }
+    private void deathEnd()//보스 사망시 소멸
+    {
+        Destroy(gameObject);
     }
 
     /// <summary>
@@ -89,8 +140,6 @@ public class Boss : MonoBehaviour
 
         if (hit)
         {
-            
-
             if (hit.transform.tag == "Wall" || hit.transform.tag == "Ground" || closeAttack == true)
             {
                 anim.SetBool("isMove", false);
@@ -98,7 +147,6 @@ public class Boss : MonoBehaviour
                 rigid.velocity = new Vector2(0, rigid.velocity.y);
                 return;
             }
-            
 
             if (hit.transform.CompareTag("Player") == true && backStepCheck != true)
             {
@@ -148,7 +196,6 @@ public class Boss : MonoBehaviour
         if(closeAttacking == true && closeAttack == true)
         {
             anim.SetTrigger("isAttack");
-            StartCoroutine(attackDelay());
             closeAttacking = false;
         }
 
@@ -164,7 +211,7 @@ public class Boss : MonoBehaviour
     /// <returns></returns>
     IEnumerator attackDelay()
     {
-        yield return new WaitForSeconds(1.36f);
+        yield return new WaitForSeconds(0.7f);//만약 2페이즈가 시작될때 시간 감소
 
         Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(CloseAttackPos.position, CloseAttackCover, 0);
 
@@ -173,7 +220,10 @@ public class Boss : MonoBehaviour
         {
             if (collider2Ds[iNum].gameObject.tag == "Player")
             {
-                collider2Ds[iNum].GetComponent<Player>().Damage(atk);
+                if (closeAttack == true)
+                {
+                    collider2Ds[iNum].GetComponent<Player>().Damage(atk);
+                }
             }
         }
     }
@@ -183,6 +233,7 @@ public class Boss : MonoBehaviour
     /// </summary>
     private void backStep()
     {
+        invincible = true;
         Color color = spr.color;
         color.a = 0f;
         spr.color = color;
@@ -206,10 +257,11 @@ public class Boss : MonoBehaviour
     private void longDistanceAttack()
     {
 
-        if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true)
+        if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true ||
+            wallCheckColl.IsTouchingLayers(LayerMask.GetMask("TransparentWall")) == true)
         {
-            spawnPointObj.SetActive(true);
 
+            invincible = false;
             Color color = spr.color;
             color.a = 1f;
             spr.color = color;
@@ -244,9 +296,16 @@ public class Boss : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 체크시 플레이어를 향해 텔레포트
+    /// </summary>
     private void teleportToPlayer()
     {
-
+        if (teleportCheckColl.IsTouchingLayers(LayerMask.GetMask("Player"))==true)
+        {
+            anim.SetTrigger("isCast");
+            transform.position = new Vector2(player.transform.position.x, transform.position.y);
+        }
     }
 
     private void OnDrawGizmos()//근접공격범위표시
