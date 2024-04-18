@@ -14,7 +14,7 @@ public class Boss : MonoBehaviour
     Vector3 trueScale;
     Vector3 falseScale;
     Rigidbody2D rigid;
-    bool isWallCheck;
+    bool isRight;
 
     Animator anim;
 
@@ -48,6 +48,11 @@ public class Boss : MonoBehaviour
 
     [Header("플레이어를 향해 순간이동")]
     [SerializeField] Collider2D teleportCheckColl;
+
+    [Header("벽과 충돌시 반응")]
+    [SerializeField] BoxCollider2D backCheck;
+    [SerializeField] GameObject teleportTpEscape;
+    bool isWallCheck;
 
     [Header("2페이즈")]
     bool phase;
@@ -90,6 +95,7 @@ public class Boss : MonoBehaviour
         teleportToPlayer();
         phaseChack();
         death();
+        wallCheck();
     }
 
     /// <summary>
@@ -107,7 +113,7 @@ public class Boss : MonoBehaviour
             //보스색 변경
             //애니메이션 속도 2배
             //이동속도 2배
-            //일반 몬스터 소환
+            gameManager.checkSpawn();
         }
     }
 
@@ -157,7 +163,7 @@ public class Boss : MonoBehaviour
                 //내 스케일이 플레이어를 보고있는지 확인
                 //변경
 
-                bool isRight = (player.transform.position - transform.position).x > 0;//플레이어가 보스의 뒤로 갈때 true가 됨
+                isRight = (player.transform.position - transform.position).x > 0;//플레이어가 보스의 뒤로 갈때 true가 됨
                 if (isRight != true)
                 {
                     rigid.velocity = new Vector2(-speed, rigid.velocity.y);
@@ -246,7 +252,6 @@ public class Boss : MonoBehaviour
             if (wallCheckColl.IsTouchingLayers(LayerMask.GetMask("TransparentWall")))
             {
                 rigid.velocity = new Vector2(0,rigid.velocity.y);
-                isWallCheck = true;
             }
         }
     }
@@ -257,8 +262,7 @@ public class Boss : MonoBehaviour
     private void longDistanceAttack()
     {
 
-        if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true ||
-            wallCheckColl.IsTouchingLayers(LayerMask.GetMask("TransparentWall")) == true)
+        if (playerLongDistanceCheckColl.IsTouchingLayers(LayerMask.GetMask("Player")) == true && backStepCheck == true)
         {
 
             invincible = false;
@@ -305,6 +309,25 @@ public class Boss : MonoBehaviour
         {
             anim.SetTrigger("isCast");
             transform.position = new Vector2(player.transform.position.x, transform.position.y);
+        }
+    }
+
+    /// <summary>
+    /// 보스가 벽에 닿았을 때의 행동
+    /// </summary>
+    private void wallCheck()
+    {
+        if (wallCheckColl.IsTouchingLayers(LayerMask.GetMask("TransparentWall")) == true)
+        {
+            invincible = false;
+            Color color = spr.color;
+            color.a = 1f;
+            spr.color = color;
+
+            isWallCheck = true;
+            backStepCheck = false;
+
+            transform.position = new Vector2(teleportTpEscape.transform.position.x, transform.position.y);
         }
     }
 

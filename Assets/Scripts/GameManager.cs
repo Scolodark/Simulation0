@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float spawnTime = 1.0f;
     float sTimer = 0.0f; //타이마
     [SerializeField] Transform[] trsSpawnPoint;//스폰지점
+    [SerializeField] Transform[] enemySpawnPoint;
     [SerializeField] GameObject spawnPount;
 
     void Start()
@@ -21,13 +22,13 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        checkSpawn();
+
     }
 
     /// <summary>
     /// 적스폰시간, 조건확인
     /// </summary>
-    private void checkSpawn()
+    public void checkSpawn()
     {
         if (isSpawn == false) return;
 
@@ -46,10 +47,10 @@ public class GameManager : MonoBehaviour
     {
         GameObject objEnemy = listEnemy[0];//만들어질 몬스터
 
-        int count = trsSpawnPoint.Length;
+        int count = enemySpawnPoint.Length;
         for (int iNum = 0; iNum < count; ++iNum)
         { 
-            Vector3 newPos = trsSpawnPoint[iNum].position;
+            Vector3 newPos = enemySpawnPoint[iNum].position;
             GameObject go = Instantiate(objEnemy, newPos, Quaternion.identity);
         }
     }
