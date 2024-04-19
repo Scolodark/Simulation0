@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("¼¼ÆÃ ui")]
     [SerializeField] GameObject settingObj;
+    [SerializeField] GameObject manualObj;
     int check;
 
     void Start()
@@ -121,6 +122,7 @@ public class GameManager : MonoBehaviour
         if (monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
         {
             settingObj.SetActive(true);
+            manualObj.SetActive(false);
             check++;
         }
         else if(Input.GetKeyUp(KeyCode.Z) && check > 1 || monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) == false)
