@@ -47,9 +47,11 @@ public class Player : MonoBehaviour
 
     [Header("피격 설정")]
     [SerializeField] float safeTime;
+    [SerializeField] BarController barController;
     float safeTimer;
     SpriteRenderer spr;
     bool hitDamageCheck;
+    float fullHp;
 
     [Header("공격범위 설정")]
     [SerializeField] Transform pos;
@@ -93,6 +95,7 @@ public class Player : MonoBehaviour
             hp = hp - damge;
             anim.SetTrigger("isDamage");
             safeTimer = safeTime;
+            barController.hpGage(fullHp, damge);
         }
     }
 
@@ -128,6 +131,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        fullHp = hp;
         jumpCheck = true;
         dashVertical = jumpForce;
         doDash = 0f;

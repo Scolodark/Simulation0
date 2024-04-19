@@ -15,14 +15,28 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform[] enemySpawnPoint;
     [SerializeField] GameObject spawnPount;
 
+    [Header("체력Ui")]
+    [SerializeField] BoxCollider2D bossRoom;
+    [SerializeField] GameObject hpUiObj;
+
+    [Header("안내Ui")]
+    [SerializeField] BoxCollider2D monitorColl;
+    [SerializeField] GameObject pressZ;
+
+    [Header("세팅 ui")]
+    [SerializeField] GameObject settingObj;
+    int check;
+
     void Start()
     {
-        
+        settingObj.SetActive(false);
     }
 
     void Update()
     {
-
+        hpShowAndHide();
+        pressZShowAndHide();
+        settingUiShowAndHide();
     }
 
     /// <summary>
@@ -67,6 +81,52 @@ public class GameManager : MonoBehaviour
         {
             Vector3 newPos = trsSpawnPoint[iNum].position;
             GameObject go = Instantiate(objBullet, newPos, Quaternion.identity);
+        }
+    }
+    /// <summary>
+    /// 체력Ui숨김 보임
+    /// </summary>
+    private void hpShowAndHide()
+    {
+        if (bossRoom.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            hpUiObj.SetActive(true);
+        }
+        else
+        {
+            hpUiObj.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Press 'Z'!
+    /// </summary>
+    private void pressZShowAndHide()
+    {
+        if (monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            pressZ.SetActive(true);
+        }
+        else
+        {
+            pressZ.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 세팅창 뜨기
+    /// </summary>
+    private void settingUiShowAndHide()
+    {
+        if (monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
+        {
+            settingObj.SetActive(true);
+            check++;
+        }
+        else if(Input.GetKeyUp(KeyCode.Z) && check > 1 || monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) == false)
+        {
+            settingObj.SetActive(false);
+            check = 0;
         }
     }
 }

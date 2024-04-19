@@ -54,6 +54,9 @@ public class Boss : MonoBehaviour
     [SerializeField] GameObject teleportTpEscape;
     bool isWallCheck;
 
+    [Header("피격효과")]
+    [SerializeField] BarController barController;
+
     [Header("2페이즈")]
     bool phase;
     float fullHp;
@@ -67,6 +70,7 @@ public class Boss : MonoBehaviour
         {
             hp = hp - damge;
             anim.SetTrigger("isDamage");
+            barController.hpGage(fullHp, damge);
             //공격받을때 색이 바뀜
         }
     }
@@ -111,8 +115,10 @@ public class Boss : MonoBehaviour
         if(phase == true)
         {
             //보스색 변경
+            spr.color = new Color(1, 0, 0);
             //애니메이션 속도 2배
-            //이동속도 2배
+            anim.speed = 2f;
+            speed =10;
             gameManager.checkSpawn();
         }
     }
@@ -217,7 +223,15 @@ public class Boss : MonoBehaviour
     /// <returns></returns>
     IEnumerator attackDelay()
     {
-        yield return new WaitForSeconds(0.7f);//만약 2페이즈가 시작될때 시간 감소
+        if(phase == false)
+        {
+            yield return new WaitForSeconds(0.7f);//만약 2페이즈가 시작될때 시간 감소
+        }
+        else if( phase == true)
+        {
+            yield return new WaitForSeconds(0.35f);
+        }
+       
 
         Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(CloseAttackPos.position, CloseAttackCover, 0);
 

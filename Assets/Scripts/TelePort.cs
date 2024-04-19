@@ -26,6 +26,7 @@ public class TelePort : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerStay2D(Collider2D collision)
     {
+
         if (collision.CompareTag("Player") && sendObj != null)
         {
             StartCoroutine(Teleport());
