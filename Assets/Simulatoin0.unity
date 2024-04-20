@@ -7077,6 +7077,7 @@ MonoBehaviour:
   spawnPount: {fileID: 1353924066740206943, guid: 9759ba2c32b4915419d69014088f1ee6, type: 3}
   bossRoom: {fileID: 1525128398}
   hpUiObj: {fileID: 1201297809}
+  bossHpBar: {fileID: 1201297812}
   monitorColl: {fileID: 1134046419}
   pressZ: {fileID: 359145362}
   settingObj: {fileID: 1927103194}
@@ -20868,6 +20869,8 @@ MonoBehaviour:
   teleportTpEscape: {fileID: 1715539076}
   barController: {fileID: 1201297810}
   checkButton: {fileID: 221842927}
+  reSpawnObj: {fileID: 678101668}
+  reSpawn: {fileID: 678101672}
 --- !u!1 &1927103194
 GameObject:
   m_ObjectHideFlags: 0

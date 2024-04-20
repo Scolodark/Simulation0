@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SettingUiController : MonoBehaviour
 {
@@ -86,13 +87,6 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-
-        Application.Quit();
-        Debug.Log("Á¾·á");
-#endif
-        
+        SceneManager.LoadScene("Main");
     }
 }

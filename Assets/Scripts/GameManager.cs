@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("체력Ui")]
     [SerializeField] BoxCollider2D bossRoom;
     [SerializeField] GameObject hpUiObj;
+    [SerializeField] CanvasScaler bossHpBar;
 
     [Header("안내Ui")]
     [SerializeField] BoxCollider2D monitorColl;
@@ -101,11 +102,11 @@ public class GameManager : MonoBehaviour
     {
         if (bossRoom.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            hpUiObj.SetActive(true);
+            bossHpBar.scaleFactor = 1;
         }
         else
         {
-            hpUiObj.SetActive(false);
+            bossHpBar.scaleFactor = 0;
         }
     }
 

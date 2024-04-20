@@ -22,12 +22,23 @@ public class ReSpawn : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 플레이어 체력바 회복
+    /// </summary>
     public void RecoverHp()
     {
         if (boxColl.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
             playerBar.hpGage(gameManager.PlayerHp, gameManager.PlayerHp*-1);
             Debug.Log(gameManager.PlayerHp);
+        }
+    }
+
+    public void BossRecoverHp()
+    {
+        if (boxColl.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            bossBar.hpGage(gameManager.BossHp, gameManager.BossHp * -1);
         }
     }
 }

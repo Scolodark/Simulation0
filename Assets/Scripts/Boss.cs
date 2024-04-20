@@ -67,8 +67,13 @@ public class Boss : MonoBehaviour
 
     [Header("능력치 변경")]
     [SerializeField] Button checkButton;
+    [SerializeField] GameObject reSpawnObj;
+    [SerializeField] ReSpawn reSpawn;
+    
 
-
+    /// <summary>
+    /// 보스 능력치 변경
+    /// </summary>
     public void BossStatousSetting()
     {
         gameManager.BossStatusChange();
@@ -117,6 +122,19 @@ public class Boss : MonoBehaviour
         phaseChack();
         death();
         wallCheck();
+        hpReset();
+    }
+
+    /// <summary>
+    /// 플레이어가 리스폰 될시 보스 체력 초기화
+    /// </summary>
+    private void hpReset()
+    {
+        if (player.transform.position.x == reSpawnObj.transform.position.x)
+        {
+            hp = fullHp;
+            reSpawn.BossRecoverHp();
+        }
     }
 
     /// <summary>
