@@ -5,10 +5,19 @@ using UnityEngine;
 public class Falling : MonoBehaviour
 {
     [SerializeField] Player player;
+    [SerializeField] Boss boss;
 
     [SerializeField] GameObject playerObj;
     [SerializeField] GameObject sendObj;
     [SerializeField] GameObject cam;
+
+    [SerializeField] GameObject bossObj;
+    [SerializeField] GameObject bossTpObj;
+
+    [SerializeField] GameManager gameManager;
+
+    float playerHp;
+    float bossHp;
 
     // Start is called before the first frame update
     void Start()
@@ -19,8 +28,11 @@ public class Falling : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)//플레이어 추락시 이동
     {
-        player.DieEffect();
+        playerHp = gameManager.PlayerHp;
+
+        player.Damage(playerHp);
+
         playerObj.transform.position = sendObj.transform.position;
-        //cam.transform.position = new Vector3(sendObj.transform.position.x, sendObj.transform.position.y + 1.5f, cam.transform.position.z);
+        bossObj.transform.position = new Vector2(bossTpObj.transform.position.x, playerObj.transform.position.y);
     }
 }

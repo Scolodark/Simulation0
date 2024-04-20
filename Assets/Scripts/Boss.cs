@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
@@ -64,6 +65,22 @@ public class Boss : MonoBehaviour
     [Header("사망")]
     bool deathCheck;
 
+    [Header("능력치 변경")]
+    [SerializeField] Button checkButton;
+
+
+    public void BossStatousSetting()
+    {
+        gameManager.BossStatusChange();
+        hp = gameManager.BossHp;
+        atk = gameManager.BossAtk;
+        fullHp = hp;
+    }
+
+    /// <summary>
+    /// 공격받을때
+    /// </summary>
+    /// <param name="damge"></param>
     public void Damage(float damge)
     {
         if(invincible == false)

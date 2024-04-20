@@ -21,7 +21,7 @@ public class BarController : MonoBehaviour
 
     public void hpGage(float _hp, float _damage)
     {
-        hp = curHbBar.sizeDelta.x - _damage*(hpBar / _hp);
+        hp = curHbBar.sizeDelta.x + -_damage*(hpBar / _hp);
         curHbBar.sizeDelta = new Vector2(hp, curHbBar.sizeDelta.y);
     }
 }

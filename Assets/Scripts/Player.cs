@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Player : MonoBehaviour
@@ -79,7 +80,22 @@ public class Player : MonoBehaviour
     bool hitCountbool;
 
     [Header("사망처리")]
-    [SerializeField] GameObject reSpwObj;
+    [SerializeField] BoxCollider2D reSpwObj;
+    [SerializeField] ReSpawn reSpawn;
+
+    [Header("능력치변경")]
+    [SerializeField] GameManager gameManager;
+
+    /// <summary>
+    /// 플레이어 능력치 조정
+    /// </summary>
+    public void ButtonCheck()
+    {
+        gameManager.PlayerStatusChange();
+        hp = gameManager.PlayerHp;
+        atk = gameManager.PlayerAtk;
+        fullHp = hp;
+    }
 
 
     /// <summary>
@@ -150,6 +166,8 @@ public class Player : MonoBehaviour
 
         playerAttack();
         parrying();
+
+        DieEffect();
 
         hitSprite();
 
@@ -443,14 +461,21 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DieEffect()
+    /// <summary>
+    /// 플레이어 사망시
+    /// </summary>
+    private void DieEffect()
     {
-        anim.SetTrigger("Die");
-    }
-    private void RespawnEffect()
-    {
-        anim.SetTrigger("isRespawn");
-        //transform.position = reSpwObj.transform.position;
+        if(hp <= 0)
+        {
+            anim.SetTrigger("Die");
+            if (reSpwObj.IsTouchingLayers(LayerMask.GetMask("Player"))&& isGround == true)
+            {
+                hp = fullHp;
+                anim.SetTrigger("isRespawn");
+                reSpawn.RecoverHp();
+            }
+        }
     }
 
     /// <summary>

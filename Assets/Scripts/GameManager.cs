@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,15 @@ public class GameManager : MonoBehaviour
     [Header("세팅 ui")]
     [SerializeField] GameObject settingObj;
     [SerializeField] GameObject manualObj;
+    [SerializeField] GameObject settingMenuObj;
+    [SerializeField] Slider playerHpSlider;
+    [SerializeField] Slider playerAtkSlider;
+    [SerializeField] Slider bossHpSlider;
+    [SerializeField] Slider bossAtkSlider;
+    public float PlayerHp;
+    public float PlayerAtk;
+    public float BossHp;
+    public float BossAtk;
     int check;
 
     void Start()
@@ -121,6 +131,7 @@ public class GameManager : MonoBehaviour
     {
         if (monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
         {
+            settingMenuObj.SetActive(false);
             settingObj.SetActive(true);
             manualObj.SetActive(false);
             check++;
@@ -130,5 +141,23 @@ public class GameManager : MonoBehaviour
             settingObj.SetActive(false);
             check = 0;
         }
+    }
+
+    /// <summary>
+    /// 플레이어 슬라이드값을 저장
+    /// </summary>
+    public void PlayerStatusChange()
+    {
+        PlayerHp = playerHpSlider.value;
+        PlayerAtk = playerAtkSlider.value;
+    }
+
+    /// <summary>
+    /// 보스 슬라이더 값을 저장
+    /// </summary>
+    public void BossStatusChange()
+    {
+        BossHp = bossHpSlider.value;
+        BossAtk = bossAtkSlider.value;
     }
 }
