@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class GameOverScenes : MonoBehaviour
 {
 
+
+
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -17,6 +19,9 @@ public class GameOverScenes : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 메인화면으로 이동
+    /// </summary>
     public void ReturnGame()
     {
         SceneManager.LoadScene("Main");

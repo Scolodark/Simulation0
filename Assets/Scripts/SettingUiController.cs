@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class SettingUiController : MonoBehaviour
 {
+    [SerializeField] GameObject thisMenu;
 
     [Header("게임 메뉴얼")]
     [SerializeField] GameObject helpManualObj;
@@ -87,6 +88,6 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-        SceneManager.LoadScene("Main");
+        thisMenu.SetActive(false);
     }
 }

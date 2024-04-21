@@ -39,9 +39,14 @@ public class GameManager : MonoBehaviour
     public float BossAtk;
     int check;
 
+    [Header("ESC¸Þ´º")]
+    [SerializeField] GameObject escObj;
+    int check2;
+
     void Start()
     {
         settingObj.SetActive(false);
+        escObj.SetActive(false);
     }
 
     void Update()
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
         hpShowAndHide();
         pressZShowAndHide();
         settingUiShowAndHide();
+        escMenu();
     }
 
     /// <summary>
@@ -160,5 +166,19 @@ public class GameManager : MonoBehaviour
     {
         BossHp = bossHpSlider.value;
         BossAtk = bossAtkSlider.value;
+    }
+
+    private void escMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            escObj.SetActive(true);
+            check2++;
+        }
+        else if(Input.GetKeyUp(KeyCode.Escape) && check2 > 1)
+        {
+            escObj.SetActive(false);
+            check2 = 0;
+        }
     }
 }

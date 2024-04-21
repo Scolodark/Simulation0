@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 {
@@ -169,6 +170,7 @@ public class Boss : MonoBehaviour
     private void deathEnd()//º¸½º »ç¸Á½Ã ¼Ò¸ê
     {
         Destroy(gameObject);
+        SceneManager.LoadScene("GameClear");
     }
 
     /// <summary>

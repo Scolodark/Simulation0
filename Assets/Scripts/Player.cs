@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour
@@ -469,11 +470,15 @@ public class Player : MonoBehaviour
         if(hp <= 0)
         {
             anim.SetTrigger("Die");
-            if (reSpwObj.IsTouchingLayers(LayerMask.GetMask("Player"))&& isGround == true)
+            if (reSpwObj.IsTouchingLayers(LayerMask.GetMask("Player")))
             {
                 hp = fullHp;
                 anim.SetTrigger("isRespawn");
                 reSpawn.RecoverHp();
+            }
+            else if(isGround == true)
+            {
+                SceneManager.LoadScene("GameOver");
             }
         }
     }

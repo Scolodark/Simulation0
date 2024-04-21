@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Simulatoin0.unity
     guid: 8491a0133ff92a044b6f9136c39bcfcb
+  - enabled: 1
+    path: Assets/GameOver.unity
+    guid: 13a4ea1676956bd4291ec798b9607d1f
+  - enabled: 1
+    path: Assets/GameClear.unity
+    guid: 0a593000140ea7144a8e6a3f77544456
   m_configObjects: {}
