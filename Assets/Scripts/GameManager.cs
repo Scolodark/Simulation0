@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     [Header("체력Ui")]
     [SerializeField] BoxCollider2D bossRoom;
     [SerializeField] GameObject hpUiObj;
-    [SerializeField] CanvasScaler bossHpBar;
 
     [Header("안내Ui")]
     [SerializeField] BoxCollider2D monitorColl;
@@ -108,11 +107,11 @@ public class GameManager : MonoBehaviour
     {
         if (bossRoom.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            bossHpBar.scaleFactor = 1;
+            hpUiObj.transform.localScale = new Vector3 (1f, 1f, 1f);
         }
         else
         {
-            bossHpBar.scaleFactor = 0;
+            hpUiObj.transform.localScale = new Vector3(0f, 1f, 1f);
         }
     }
 
@@ -146,6 +145,11 @@ public class GameManager : MonoBehaviour
         else if(Input.GetKeyUp(KeyCode.Z) && check > 1 || monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) == false)
         {
             settingObj.SetActive(false);
+            check = 0;
+        }
+
+        if(settingObj.activeSelf == false)
+        {
             check = 0;
         }
     }

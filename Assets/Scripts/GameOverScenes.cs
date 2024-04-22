@@ -25,6 +25,7 @@ public class GameOverScenes : MonoBehaviour
     public void ReturnGame()
     {
         SceneManager.LoadScene("Main");
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ public class GameOverScenes : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
