@@ -87,6 +87,14 @@ public class Player : MonoBehaviour
     [Header("능력치변경")]
     [SerializeField] GameManager gameManager;
 
+    [Header("Ui작동확인")]
+    [SerializeField] GameObject settingUI;
+    [SerializeField] GameObject escUi;
+
+    //Ui작동감지
+    bool uiCheck;
+    int uiCheckNum;
+
     /// <summary>
     /// 플레이어 능력치 조정
     /// </summary>
@@ -109,6 +117,7 @@ public class Player : MonoBehaviour
 
         if(safeTimer == 0)
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Run);
             hp = hp - damge;
             anim.SetTrigger("isDamage");
             safeTimer = safeTime;
@@ -182,6 +191,8 @@ public class Player : MonoBehaviour
 
         lockOnEffect();
         hitCameraEffect();
+
+        UiChecking();
     }
 
     /// <summary>
@@ -282,6 +293,14 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// 걸을때 사운드
+    /// </summary>
+    private void walkingSound()
+    {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Walk);
+    }
+
+    /// <summary>
     /// 플레이어 점프
     /// </summary>
     private void playerJump()
@@ -289,6 +308,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && isGround == true && jumpCheck == true)//최대점프
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Jump);
             rigid.velocity = new Vector2(moveDir.x, jumpForce);
             jumpEffectPrefabs();
             
@@ -390,10 +410,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void playerAttack()
     {
-        if (hitDamageCheck == true) return;//공격받는 도중 공격 불가
+        if (hitDamageCheck == true || uiCheck == true) return;//공격받는 도중 공격 불가
 
         if (Input.GetMouseButtonDown(0) && attackCoolTime == 0)
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Attack);
             sprAttack.color = new Color(1,0,0);
             StartCoroutine(FadeInOut());//이팩트 표시
             anim.SetTrigger("isAttack");
@@ -421,10 +442,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void parrying()
     {
-        if (hitDamageCheck == true) return;
+        if (hitDamageCheck == true || uiCheck == true) return;
 
         if (Input.GetMouseButtonDown(1) && attackCoolTime == 0)
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Block);
             sprAttack.color = new Color(0, 0, 1);
             StartCoroutine(FadeInOut());//이팩트 표시
             anim.SetTrigger("isAttack");
@@ -478,6 +500,7 @@ public class Player : MonoBehaviour
             }
             else if(isGround == true)
             {
+                SoundManager.Instance.PlaySfx(SoundManager.Sfx.Death);
                 SceneManager.LoadScene("GameOver");
             }
         }
@@ -625,6 +648,18 @@ public class Player : MonoBehaviour
             hitCheckCount = 0;
             hitCountbool = true;
             cameraInsert.GetComponent<CameraSetting>().ShakeCamera(0.1f);
+        }
+    }
+
+    private void UiChecking()
+    {
+        if(settingUI.activeSelf == true || escUi.activeSelf == true)
+        {
+            uiCheck = true;
+        }
+        else
+        {
+            uiCheck = false;
         }
     }
 }

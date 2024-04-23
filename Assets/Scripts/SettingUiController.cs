@@ -38,6 +38,7 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void SettingMenu()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         settingMenuObj.SetActive(true);
     }
 
@@ -64,6 +65,7 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void LevelChangeMenuExit()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         levelChangeMenuObj.SetActive(false);
     }
 
@@ -72,6 +74,7 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void HelpText()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         helpManualObj.SetActive(true);
     }
 
@@ -80,6 +83,7 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void ExitHelpText()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         helpManualObj.SetActive(false);
     }
 
@@ -88,6 +92,7 @@ public class SettingUiController : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         thisMenu.SetActive(false);
     }
 }

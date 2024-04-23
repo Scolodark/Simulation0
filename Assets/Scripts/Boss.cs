@@ -163,12 +163,14 @@ public class Boss : MonoBehaviour
     {
         if (hp <= 0 && deathCheck == false)
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.MonserDie);
             anim.SetTrigger("isDeath");
             deathCheck = true;
         }
     }
     private void deathEnd()//보스 사망시 소멸
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Clear);
         Destroy(gameObject);
         SceneManager.LoadScene("GameClear");
     }
@@ -260,7 +262,8 @@ public class Boss : MonoBehaviour
     /// <returns></returns>
     IEnumerator attackDelay()
     {
-        if(phase == false)
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.BossAttack);
+        if (phase == false)
         {
             yield return new WaitForSeconds(0.7f);//만약 2페이즈가 시작될때 시간 감소
         }

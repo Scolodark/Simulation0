@@ -24,8 +24,8 @@ public class GameOverScenes : MonoBehaviour
     /// </summary>
     public void ReturnGame()
     {
-        SceneManager.LoadScene("Main");
         SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
+        SceneManager.LoadScene("Main");
     }
 
     /// <summary>

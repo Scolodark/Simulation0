@@ -6,24 +6,25 @@ public class SoundManager : MonoBehaviour
 {
     private static SoundManager instance = null;
 
-    public static SoundManager Instance
-    {
-        get
-        {
-            if(null == instance)
-            {
-                return null;
-            }
+    public static SoundManager Instance => instance;
 
-            return instance;
-        }
+    [System.Serializable]
+    public class Clips
+    {
+        public AudioClip clip;
+        public float sfxVolume;
     }
+
 
     [Header("SFX")]
     [SerializeField] AudioClip[] sfxClips;
     [SerializeField] float sfxVolume;
     [SerializeField] int channels;
     AudioSource[] sfxPlayers;
+
+    [Header("Audio")]
+    [SerializeField] List<Clips> listsfx;
+
     int channelIndex;
 
     public enum Sfx {Jump, Run, Walk, Block, Attack, Death, BossAttack, Click, BossShoot, MonserDie, Clear};
@@ -59,20 +60,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySfx(Sfx _sfx)
     {
-        for(int index = 0; index < sfxPlayers.Length; index++)
-        {
-            int loopIndex = (index + channelIndex) % sfxPlayers.Length;
-
-            if (sfxPlayers[loopIndex].isPlaying)
-            {
-                continue;
-            }
-            channelIndex = loopIndex;
-            sfxPlayers[loopIndex].clip = sfxClips[(int)_sfx];
-            sfxPlayers[loopIndex].Play();
-            break;
-        }
-
-        
+        Clips clipData = listsfx[(int)_sfx];
+        sfxPlayers[(int)_sfx].PlayOneShot(clipData.clip, clipData.sfxVolume);
     }
 }

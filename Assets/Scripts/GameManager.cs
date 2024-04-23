@@ -137,6 +137,7 @@ public class GameManager : MonoBehaviour
     {
         if (monitorColl.IsTouchingLayers(LayerMask.GetMask("Player")) && Input.GetKeyDown(KeyCode.Z))
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
             settingMenuObj.SetActive(false);
             settingObj.SetActive(true);
             manualObj.SetActive(false);

@@ -19,8 +19,8 @@ public class MainScenesUi : MonoBehaviour
 
     public void GameStart()
     {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         SceneManager.LoadScene("Simulatoin0");
-        //SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class MainScenesUi : MonoBehaviour
     /// </summary>
     public void ExitGame()
     {
-        //SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
