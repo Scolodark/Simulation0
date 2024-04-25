@@ -32,6 +32,14 @@ public class SettingUiController : MonoBehaviour
         playerAtkSlider.onValueChanged.AddListener(delegate { PlayerLevelChangeMenuSetting();});
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            thisMenu.SetActive(false);
+        }
+    }
+
 
     /// <summary>
     /// 난이도 조절 메뉴 켜기

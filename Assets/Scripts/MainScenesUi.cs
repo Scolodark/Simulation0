@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MainScenesUi : MonoBehaviour
 {
+    [SerializeField] GameObject soundMenu;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        SoundManager.Instance.PlayBgm(SoundManager.Bgm.Main);
     }
 
     // Update is called once per frame
@@ -17,10 +19,22 @@ public class MainScenesUi : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 게임시작
+    /// </summary>
     public void GameStart()
     {
         SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
         SceneManager.LoadScene("Simulatoin0");
+    }
+
+    /// <summary>
+    /// 사운드
+    /// </summary>
+    public void SoundMenu()
+    {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
+        soundMenu.SetActive(true);
     }
 
     /// <summary>

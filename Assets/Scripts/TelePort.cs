@@ -30,6 +30,7 @@ public class TelePort : MonoBehaviour
         if (collision.CompareTag("Player") && sendObj != null)
         {
             StartCoroutine(Teleport());
+            SoundManager.Instance.PlayBgm(SoundManager.Bgm.Boss);
         }
     }
 

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     {
         settingObj.SetActive(false);
         escObj.SetActive(false);
+        SoundManager.Instance.PlayBgm(SoundManager.Bgm.Lobby);
     }
 
     void Update()
@@ -177,6 +178,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
             escObj.SetActive(true);
             check2++;
         }

@@ -6,17 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class GameOverScenes : MonoBehaviour
 {
-
+    [SerializeField] GameObject soundMenu;
 
 
     void Start()
     {
-
+        
     }
 
     void Update()
     {
         
+    }
+
+    /// <summary>
+    /// 사운드 켜기
+    /// </summary>
+    public void SoundMenu()
+    {
+        SoundManager.Instance.PlaySfx(SoundManager.Sfx.Click);
+        soundMenu.SetActive(true);
     }
 
     /// <summary>
