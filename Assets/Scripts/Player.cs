@@ -339,7 +339,6 @@ public class Player : MonoBehaviour
             jumpCheck = true;
         }
 
-        //점프중 수평 이동속도 저하
     }
 
     /// <summary>
